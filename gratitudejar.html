@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root {
+    --deep-indigo: #1a0f2e;
+    --dark-purple: #2d1b4e;
+    --mid-purple: #5b3a8c;
+    --light-purple: #b8a1d9;
+    --pale-lavender: #e8ddf7;
+    --gray: #8a8594;
+    --soft-gray: #cfc9d6;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%;
+    background: radial-gradient(ellipse at 50% 15%, var(--dark-purple) 0%, var(--deep-indigo) 60%, #0f0a1c 100%);
+    font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+    min-height: 100%;
+  }
+
+  .stage {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 40px 20px 60px;
+  }
+
+  .stars { position: absolute; inset: 0; pointer-events: none; }
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--pale-lavender);
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: twinkle 4s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.15; }
+    50% { opacity: 0.7; }
+  }
+
+  .header { text-align: center; z-index: 3; max-width: 520px; }
+  .header .eyebrow {
+    font-weight: 300;
+    font-size: 15px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--light-purple);
+    margin-bottom: 8px;
+  }
+  .header .title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 600;
+    font-size: 48px;
+    color: var(--pale-lavender);
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 18px rgba(184, 161, 217, 0.45);
+    line-height: 1.15;
+  }
+  .header .tagline {
+    font-weight: 200;
+    font-size: 18px;
+    color: var(--soft-gray);
+    margin-top: 14px;
+    line-height: 1.6;
+  }
+  .header .sentence-example {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--light-purple);
+    margin-top: 14px;
+  }
+
+  .how-it-works {
+    z-index: 3;
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+  }
+  .how-it-works .hiw-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 28px;
+    color: var(--pale-lavender);
+    letter-spacing: 0.5px;
+  }
+  .steps-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 170px;
+    gap: 10px;
+  }
+  .step-num {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--pale-lavender), var(--mid-purple));
+    color: var(--deep-indigo);
+    font-weight: 400;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 14px rgba(184,161,217,0.5);
+  }
+  .step-title {
+    font-weight: 400;
+    font-size: 16px;
+    color: var(--pale-lavender);
+    letter-spacing: 0.3px;
+  }
+  .step-desc {
+    font-weight: 200;
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.5;
+  }
+  .step-arrow {
+    color: var(--light-purple);
+    font-size: 22px;
+    opacity: 0.6;
+  }
+
+  .jar-wrap {
+    position: relative;
+    width: 300px;
+    height: 340px;
+    margin-top: 6px;
+  }
+  .jar-wrap.shaking .jar-group { animation: shakeJar 0.6s ease-in-out; }
+
+  @keyframes shakeJar {
+    0%   { transform: translateX(0) rotate(0deg); }
+    10%  { transform: translateX(-6px) rotate(-2deg); }
+    20%  { transform: translateX(6px) rotate(2deg); }
+    30%  { transform: translateX(-8px) rotate(-3deg); }
+    40%  { transform: translateX(8px) rotate(3deg); }
+    50%  { transform: translateX(-6px) rotate(-2deg); }
+    60%  { transform: translateX(6px) rotate(2deg); }
+    70%  { transform: translateX(-4px) rotate(-1deg); }
+    80%  { transform: translateX(4px) rotate(1deg); }
+    90%  { transform: translateX(-2px) rotate(0deg); }
+    100% { transform: translateX(0) rotate(0deg); }
+  }
+
+  .halo {
+    position: absolute;
+    left: 50%;
+    top: 56%;
+    transform: translate(-50%, -50%);
+    width: 340px;
+    height: 340px;
+    background: radial-gradient(circle, rgba(184,161,217,0.35) 0%, rgba(91,58,140,0.15) 45%, transparent 70%);
+    filter: blur(10px);
+    animation: pulseHalo 5s ease-in-out infinite;
+    z-index: 0;
+  }
+  @keyframes pulseHalo {
+    0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.06); }
+  }
+
+  .jar-group { position: relative; z-index: 2; transform-origin: 50% 90%; }
+
+  svg.jar { display: block; filter: drop-shadow(0 10px 25px rgba(0,0,0,0.5)); }
+
+  .notes-field {
+    position: absolute;
+    z-index: 1;
+    left: 100px;
+    top: 94px;
+    width: 100px;
+    height: 198px;
+    clip-path: path('M 4 0 L 96 0 L 96 178 Q 96 198 76 198 L 24 198 Q 4 198 4 178 Z');
+    overflow: hidden;
+  }
+
+  .note {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .note .firefly-core {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+  }
+
+  @keyframes floatNote {
+    0%   { transform: translate(0, 0); }
+    25%  { transform: translate(3px, -6px); }
+    50%  { transform: translate(-3px, -2px); }
+    75%  { transform: translate(2px, -7px); }
+    100% { transform: translate(0, 0); }
+  }
+
+  @keyframes flicker {
+    0%, 100% { opacity: 0.25; transform: scale(0.85); }
+    50% { opacity: 1; transform: scale(1.15); }
+  }
+
+  .flying-note {
+    position: absolute;
+    left: 138px;
+    top: 58px;
+    width: 24px;
+    height: 17px;
+    border-radius: 2px;
+    background: linear-gradient(135deg, #e8ddf7, #b8a1d9);
+    box-shadow: 0 0 10px rgba(232,221,247,0.9);
+    z-index: 5;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .flying-note.launch {
+    animation: flyOut 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+  }
+  @keyframes flyOut {
+    0%   { opacity: 0; transform: translate(0, 0) scale(0.8) rotate(0deg); }
+    15%  { opacity: 1; transform: translate(-4px, -26px) scale(1) rotate(-8deg); }
+    100% { opacity: 0; transform: translate(10px, -150px) scale(1.3) rotate(6deg); }
+  }
+
+  .sparkle-origin {
+    position: absolute;
+    left: 150px;
+    top: 40px;
+    width: 0;
+    height: 0;
+    z-index: 6;
+    pointer-events: none;
+  }
+  .sparkle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 6px;
+    height: 6px;
+    background: var(--pale-lavender);
+    clip-path: polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%);
+    opacity: 0;
+    transform: translate(0,0) scale(0.3);
+  }
+  .sparkle.burst {
+    animation: sparklePop 0.9s ease-out forwards;
+  }
+  @keyframes sparklePop {
+    0%   { opacity: 0; transform: translate(0,0) scale(0.2) rotate(0deg); }
+    15%  { opacity: 1; transform: translate(calc(var(--dx) * 0.3), calc(var(--dy) * 0.3)) scale(1.1) rotate(45deg); }
+    100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.4) rotate(120deg); }
+  }
+
+  .actions-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    z-index: 3;
+  }
+
+  button.pull-btn, button.reflections-btn {
+    font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 12px;
+    border: none;
+    padding: 13px 28px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  button.pull-btn {
+    color: var(--deep-indigo);
+    background: linear-gradient(135deg, var(--pale-lavender), var(--light-purple));
+    box-shadow: 0 4px 18px rgba(184,161,217,0.45);
+  }
+  button.pull-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(184,161,217,0.6); }
+  button.pull-btn:active { transform: translateY(0); }
+  button.pull-btn:disabled { opacity: 0.6; cursor: default; transform: none; }
+
+  button.reflections-btn {
+    color: var(--pale-lavender);
+    background: transparent;
+    border: 1px solid rgba(184,161,217,0.5);
+  }
+  button.reflections-btn:hover {
+    background: rgba(184,161,217,0.12);
+    transform: translateY(-2px);
+  }
+
+  .reveal-card {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    padding: 18px 24px;
+    border-radius: 14px;
+    background: rgba(232, 221, 247, 0.06);
+    border: 1px solid rgba(184, 161, 217, 0.35);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .reveal-card.show { opacity: 1; transform: translateY(0); }
+  .reveal-card .quote {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--pale-lavender);
+    line-height: 1.5;
+  }
+
+  .reflection-input {
+    width: 100%;
+    min-height: 70px;
+    resize: vertical;
+    background: rgba(26, 15, 46, 0.55);
+    border: 1px solid rgba(184,161,217,0.4);
+    border-radius: 10px;
+    color: var(--white);
+    font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    padding: 10px 12px;
+    line-height: 1.5;
+  }
+  .reflection-input::placeholder { color: var(--gray); }
+  .reflection-input:focus {
+    outline: none;
+    border-color: var(--light-purple);
+    box-shadow: 0 0 10px rgba(184,161,217,0.35);
+  }
+
+  .save-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  button.save-btn {
+    font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: 11px;
+    color: var(--deep-indigo);
+    background: linear-gradient(135deg, var(--soft-gray), var(--light-purple));
+    border: none;
+    padding: 9px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  button.save-btn:hover { opacity: 0.9; }
+  .saved-note {
+    font-size: 11px;
+    color: var(--light-purple);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .saved-note.show { opacity: 1; }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 6, 18, 0.72);
+    backdrop-filter: blur(2px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    padding: 24px;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal-panel {
+    width: 100%;
+    max-width: 460px;
+    max-height: 78vh;
+    background: linear-gradient(160deg, #241536, #180d28);
+    border: 1px solid rgba(184,161,217,0.35);
+    border-radius: 16px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modal-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--pale-lavender);
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--gray);
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .modal-close:hover { color: var(--pale-lavender); }
+
+  .reflections-list {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 4px;
+  }
+  .reflections-list::-webkit-scrollbar { width: 6px; }
+  .reflections-list::-webkit-scrollbar-thumb { background: rgba(184,161,217,0.4); border-radius: 3px; }
+
+  .reflection-entry {
+    background: rgba(232, 221, 247, 0.05);
+    border: 1px solid rgba(184,161,217,0.25);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .reflection-entry .rp {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--light-purple);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .reflection-entry .ra {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+  .empty-state {
+    font-size: 13px;
+    color: var(--gray);
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  .lounge-invite {
+    z-index: 3;
+    width: 100%;
+    max-width: 460px;
+    margin-top: 18px;
+    text-align: center;
+    padding: 26px 28px;
+    border-radius: 16px;
+    background: linear-gradient(160deg, rgba(91,58,140,0.28), rgba(26,15,46,0.5));
+    border: 1px solid rgba(184,161,217,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .lounge-invite .li-eyebrow {
+    font-weight: 300;
+    font-size: 12px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--light-purple);
+    opacity: 0.85;
+  }
+  .lounge-invite .li-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 24px;
+    color: var(--pale-lavender);
+  }
+  .lounge-invite .li-desc {
+    font-weight: 200;
+    font-size: 14px;
+    color: var(--soft-gray);
+    line-height: 1.6;
+    max-width: 360px;
+  }
+  .lounge-invite .li-btn {
+    display: inline-block;
+    margin-top: 4px;
+    font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: var(--deep-indigo);
+    background: linear-gradient(135deg, var(--pale-lavender), var(--light-purple));
+    padding: 12px 26px;
+    border-radius: 30px;
+    text-decoration: none;
+    box-shadow: 0 4px 18px rgba(184,161,217,0.45);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .lounge-invite .li-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(184,161,217,0.6);
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="stars" id="stars"></div>
+
+  <div class="header">
+    <div class="eyebrow">Purple Light Lounge</div>
+    <div class="title">The Daily<br/>Gratitude Jar</div>
+    <div class="tagline">111 prompts. Pull one. Sit with it. Let your answer finish the sentence.</div>
+    <div class="sentence-example">"Today I am grateful for ___"</div>
+  </div>
+
+  <div class="how-it-works">
+    <div class="hiw-title">How It Works</div>
+    <div class="steps-row">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Pull a prompt</div>
+        <div class="step-desc">Reach in and let it find you</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">Complete it</div>
+        <div class="step-desc">Today I am grateful for...</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">Save & reflect</div>
+        <div class="step-desc">Revisit everything you've written</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="jar-wrap" id="jarWrap">
+    <div class="halo"></div>
+
+    <div class="jar-group" id="jarGroup">
+      <svg class="jar" width="300" height="340" viewBox="0 0 300 340" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#2d1b4e" stop-opacity="0.32"/>
+            <stop offset="50%" stop-color="#5b3a8c" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="#1a0f2e" stop-opacity="0.38"/>
+          </linearGradient>
+          <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#cfc9d6"/>
+            <stop offset="45%" stop-color="#8a8594"/>
+            <stop offset="100%" stop-color="#5b3a8c"/>
+          </linearGradient>
+          <radialGradient id="innerGlow" cx="50%" cy="55%" r="65%">
+            <stop offset="0%" stop-color="#e8ddf7" stop-opacity="0.22"/>
+            <stop offset="100%" stop-color="#e8ddf7" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <rect x="104" y="30" width="92" height="14" rx="3" fill="url(#lidGrad)" stroke="#8a8594" stroke-width="1.2"/>
+        <rect x="98" y="42" width="104" height="22" rx="4" fill="url(#lidGrad)" stroke="#8a8594" stroke-width="1.5"/>
+        <line x1="98" y1="48" x2="202" y2="48" stroke="#5b3a8c" stroke-width="1" opacity="0.5"/>
+        <line x1="98" y1="54" x2="202" y2="54" stroke="#5b3a8c" stroke-width="1" opacity="0.5"/>
+        <line x1="98" y1="60" x2="202" y2="60" stroke="#5b3a8c" stroke-width="1" opacity="0.5"/>
+
+        <path d="M 100 64
+                 L 200 64
+                 L 208 88
+                 L 208 280
+                 Q 208 300 188 300
+                 L 112 300
+                 Q 92 300 92 280
+                 L 92 88
+                 Z"
+              fill="url(#glass)"
+              stroke="#b8a1d9"
+              stroke-width="2.2"
+              opacity="0.95"/>
+
+        <path d="M 100 64
+                 L 200 64
+                 L 208 88
+                 L 208 280
+                 Q 208 300 188 300
+                 L 112 300
+                 Q 92 300 92 280
+                 L 92 88
+                 Z"
+              fill="url(#innerGlow)"/>
+
+        <line x1="92" y1="100" x2="92" y2="280" stroke="rgba(184,161,217,0.25)" stroke-width="1.5"/>
+        <line x1="208" y1="100" x2="208" y2="280" stroke="rgba(184,161,217,0.25)" stroke-width="1.5"/>
+        <line x1="130" y1="90" x2="130" y2="298" stroke="rgba(184,161,217,0.15)" stroke-width="1"/>
+        <line x1="170" y1="90" x2="170" y2="298" stroke="rgba(184,161,217,0.15)" stroke-width="1"/>
+
+        <path d="M 104 92 Q 98 190 104 292" stroke="rgba(255,255,255,0.32)" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M 196 96 Q 202 190 196 288" stroke="rgba(255,255,255,0.1)" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+        <ellipse cx="150" cy="298" rx="70" ry="8" fill="#1a0f2e" opacity="0.5"/>
+      </svg>
+
+      <div class="notes-field" id="notesField"></div>
+      <div class="flying-note" id="flyingNote"></div>
+      <div class="sparkle-origin" id="sparkleOrigin"></div>
+    </div>
+  </div>
+
+  <div class="actions-row">
+    <button class="pull-btn" id="pullBtn">Pull a Prompt</button>
+    <button class="reflections-btn" id="openReflectionsBtn">My Reflections (<span id="reflectionsCount">0</span>)</button>
+  </div>
+
+  <div class="reveal-card" id="revealCard">
+    <div class="quote" id="revealText"></div>
+    <textarea class="reflection-input" id="reflectionInput" placeholder="Let your answer finish the sentence..."></textarea>
+    <div class="save-row">
+      <button class="save-btn" id="saveBtn">Save Reflection</button>
+      <span class="saved-note" id="savedNote">Saved ✧</span>
+    </div>
+  </div>
+
+  <div class="lounge-invite">
+    <div class="li-eyebrow">You Belong Here</div>
+    <div class="li-title">Join Purple Light Lounge</div>
+    <div class="li-desc">A warm, grounded home for empaths and the spiritually curious — come learn, grow, and connect with others walking the same path.</div>
+    <a class="li-btn" href="https://www.skool.com/purple-light-lounge-6229/about" target="_blank" rel="noopener noreferrer">Join the Community</a>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <div class="modal-title">My Reflections</div>
+      <button class="modal-close" id="closeModalBtn">✕</button>
+    </div>
+    <div class="reflections-list" id="reflectionsList"></div>
+  </div>
+</div>
+
+<script>
+  const starsContainer = document.getElementById('stars');
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.animationDelay = (Math.random() * 4) + 's';
+    starsContainer.appendChild(s);
+  }
+
+  const field = document.getElementById('notesField');
+
+  const fireflyColors = [
+    { core: '#f4e4b8', glow: 'rgba(244, 228, 184, 0.9)' },
+    { core: '#e8ddf7', glow: 'rgba(232, 221, 247, 0.9)' },
+    { core: '#d4b8f0', glow: 'rgba(212, 184, 240, 0.85)' },
+    { core: '#ffffff', glow: 'rgba(255, 255, 255, 0.85)' },
+    { core: '#c9a8e8', glow: 'rgba(201, 168, 232, 0.85)' }
+  ];
+
+  const notesCount = 55;
+  const positions = [];
+  for (let i = 0; i < notesCount; i++) {
+    positions.push({
+      x: 3 + Math.random() * 90,
+      y: 3 + Math.random() * 188
+    });
+  }
+
+  const noteEls = [];
+  for (let i = 0; i < notesCount; i++) {
+    const note = document.createElement('div');
+    note.className = 'note';
+    const pos = positions[i];
+    note.style.left = pos.x + 'px';
+    note.style.top = pos.y + 'px';
+
+    const color = fireflyColors[i % fireflyColors.length];
+    const size = 4 + Math.random() * 4;
+    note.style.width = size + 'px';
+    note.style.height = size + 'px';
+
+    const core = document.createElement('div');
+    core.className = 'firefly-core';
+    core.style.background = color.core;
+    core.style.boxShadow = `0 0 ${4 + size}px ${color.glow}, 0 0 ${8 + size * 2}px ${color.glow}`;
+    const flickerDuration = (1.5 + Math.random() * 2.5).toFixed(1);
+    const flickerDelay = (Math.random() * 3).toFixed(1);
+    core.style.animation = `flicker ${flickerDuration}s ease-in-out ${flickerDelay}s infinite`;
+    note.appendChild(core);
+
+    const duration = (6 + Math.random() * 5).toFixed(1);
+    const delay = (Math.random() * 5).toFixed(1);
+    note.style.animation = `floatNote ${duration}s ease-in-out ${delay}s infinite`;
+
+    field.appendChild(note);
+    noteEls.push(note);
+  }
+
+  const prompts = [
+    "Today I am grateful for ___",
+    "Right now, my heart feels thankful for ___",
+    "One person I appreciate today is ___",
+    "A small joy I noticed recently is ___",
+    "Something my body is grateful for is ___",
+    "A lesson I'm thankful I learned is ___",
+    "One thing about my home I appreciate is ___",
+    "A memory that fills me with gratitude is ___",
+    "Something in nature I'm grateful for is ___",
+    "A part of myself I'm learning to appreciate is ___",
+    "One comfort I'm thankful for today is ___",
+    "A friendship I feel grateful for is ___",
+    "Something unexpected that brought me joy is ___",
+    "A skill I'm grateful I have is ___",
+    "One thing about today that felt good is ___",
+    "A challenge I'm now grateful for is ___",
+    "Something simple that made me smile is ___",
+    "A place that fills me with gratitude is ___",
+    "One thing my past self did that I'm thankful for is ___",
+    "A sound I'm grateful to hear is ___",
+    "Someone who supported me that I appreciate is ___",
+    "A habit I'm grateful I've built is ___",
+    "One thing about my body I'm thankful for is ___",
+    "A book, song, or show I'm grateful exists is ___",
+    "Something I take for granted that I want to appreciate more is ___",
+    "A risk I took that I'm now grateful for is ___",
+    "One small win today I'm proud of is ___",
+    "A quality in myself I'm grateful for is ___",
+    "Something about this season of life I appreciate is ___",
+    "A teacher or mentor I'm thankful for is ___",
+    "One thing that made me laugh recently is ___",
+    "A tradition I'm grateful to have is ___",
+    "Something my family gave me that I appreciate is ___",
+    "A moment of peace I'm grateful for is ___",
+    "One thing I'm looking forward to that I appreciate is ___",
+    "A color, texture, or sight I'm grateful for is ___",
+    "Something that healed a part of me is ___",
+    "A boundary I'm grateful I set is ___",
+    "One thing about my morning I appreciated is ___",
+    "A stranger's kindness I'm thankful for is ___",
+    "Something I created that I'm proud of is ___",
+    "A fear I'm grateful I faced is ___",
+    "One thing my intuition helped me with is ___",
+    "A season of growth I'm thankful for is ___",
+    "Something about my mind I appreciate is ___",
+    "A meal or drink I'm grateful for today is ___",
+    "One thing about my community I appreciate is ___",
+    "A goodbye that taught me something I'm thankful for is ___",
+    "Something warm and cozy I'm grateful for is ___",
+    "A version of myself from the past I'm thankful for is ___",
+    "One thing about my voice I appreciate is ___",
+    "A plant, animal, or creature I'm grateful for is ___",
+    "Something I overcame that I'm proud of is ___",
+    "A gift someone gave me that I still appreciate is ___",
+    "One thing about slowing down I'm grateful for is ___",
+    "A conversation that stayed with me is ___",
+    "Something about my creativity I'm thankful for is ___",
+    "A season of rest I'm grateful I allowed myself is ___",
+    "One thing my hands have done that I'm thankful for is ___",
+    "A piece of advice I'm grateful I received is ___",
+    "Something about aging I've come to appreciate is ___",
+    "A dream I'm grateful I'm chasing is ___",
+    "One thing about vulnerability I've come to appreciate is ___",
+    "A ritual that grounds me is ___",
+    "Something my younger self would be proud of is ___",
+    "A gift I have that I don't say thank you for enough is ___",
+    "One thing about solitude I'm grateful for is ___",
+    "A person who taught me how to love better is ___",
+    "Something about today's weather I appreciated is ___",
+    "A moment I felt truly present in was ___",
+    "One thing about my energy today I'm thankful for is ___",
+    "A form of art that moves me is ___",
+    "Something I've forgiven myself for is ___",
+    "A place I've traveled to that I'm grateful for is ___",
+    "One thing about my breath I appreciate is ___",
+    "A support system I'm thankful to have is ___",
+    "Something that made this week easier is ___",
+    "A quiet moment I'm grateful I had is ___",
+    "One thing my past mistakes taught me is ___",
+    "A comfort object or item I'm thankful for is ___",
+    "Something about my career or work I appreciate is ___",
+    "A person who makes me feel safe is ___",
+    "One thing about my imagination I'm grateful for is ___",
+    "A change I resisted but am now thankful for is ___",
+    "Something spiritual or sacred I'm grateful for is ___",
+    "A form of movement or exercise I appreciate is ___",
+    "One thing about my patience I'm thankful for is ___",
+    "A memory with a loved one I cherish is ___",
+    "Something small that made today lighter is ___",
+    "A part of my routine I'm grateful for is ___",
+    "One thing about my resilience I appreciate is ___",
+    "A sunrise, sunset, or sky I'm grateful I saw is ___",
+    "Something I learned about myself recently is ___",
+    "A comfort food that brings me joy is ___",
+    "One thing about my curiosity I'm thankful for is ___",
+    "A person who has shown me unconditional love is ___",
+    "Something about this exact moment I'm grateful for is ___",
+    "A struggle that made me stronger is ___",
+    "One thing I appreciate about slowing my pace is ___",
+    "A hobby that brings me peace is ___",
+    "Something about my heart I'm thankful for is ___",
+    "A wish that came true that I'm grateful for is ___",
+    "One thing about connection I've come to appreciate is ___",
+    "A smell that brings back a happy memory is ___",
+    "Something I'm proud of that no one else knows is ___",
+    "A form of guidance I'm grateful for is ___",
+    "One thing about softness I've learned to appreciate is ___",
+    "A community space that feels like home is ___",
+    "Something about today, just as it is, that I'm grateful for is ___"
+  ];
+
+  const jarWrap = document.getElementById('jarWrap');
+  const pullBtn = document.getElementById('pullBtn');
+  const flyingNote = document.getElementById('flyingNote');
+  const sparkleOrigin = document.getElementById('sparkleOrigin');
+  const revealCard = document.getElementById('revealCard');
+  const revealText = document.getElementById('revealText');
+  const reflectionInput = document.getElementById('reflectionInput');
+  const saveBtn = document.getElementById('saveBtn');
+  const savedNote = document.getElementById('savedNote');
+  const openReflectionsBtn = document.getElementById('openReflectionsBtn');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+  const modalOverlay = document.getElementById('modalOverlay');
+  const reflectionsList = document.getElementById('reflectionsList');
+  const reflectionsCount = document.getElementById('reflectionsCount');
+
+  const sparkleColors = ['#e8ddf7', '#b8a1d9', '#ffffff', '#cfc9d6'];
+
+  let reflections = [];
+  let currentPrompt = '';
+
+  function burstSparkles() {
+    const count = 14;
+    for (let i = 0; i < count; i++) {
+      const sp = document.createElement('div');
+      sp.className = 'sparkle';
+      const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.4 - 0.2);
+      const dist = 40 + Math.random() * 50;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist - 20;
+      sp.style.setProperty('--dx', dx.toFixed(1) + 'px');
+      sp.style.setProperty('--dy', dy.toFixed(1) + 'px');
+      sp.style.background = sparkleColors[i % sparkleColors.length];
+      const size = 4 + Math.random() * 5;
+      sp.style.width = size + 'px';
+      sp.style.height = size + 'px';
+      sparkleOrigin.appendChild(sp);
+      requestAnimationFrame(() => sp.classList.add('burst'));
+      setTimeout(() => sp.remove(), 1000);
+    }
+  }
+
+  function renderReflectionsList() {
+    reflectionsCount.textContent = reflections.length;
+    if (reflections.length === 0) {
+      reflectionsList.innerHTML = '<div class="empty-state">No reflections saved yet. Pull a prompt and write your answer to begin.</div>';
+      return;
+    }
+    reflectionsList.innerHTML = '';
+    for (let i = reflections.length - 1; i >= 0; i--) {
+      const entry = reflections[i];
+      const div = document.createElement('div');
+      div.className = 'reflection-entry';
+      const rp = document.createElement('div');
+      rp.className = 'rp';
+      rp.textContent = entry.prompt;
+      const ra = document.createElement('div');
+      ra.className = 'ra';
+      ra.textContent = entry.response;
+      div.appendChild(rp);
+      div.appendChild(ra);
+      reflectionsList.appendChild(div);
+    }
+  }
+
+  let busy = false;
+
+  pullBtn.addEventListener('click', () => {
+    if (busy) return;
+    busy = true;
+    pullBtn.disabled = true;
+
+    revealCard.classList.remove('show');
+    savedNote.classList.remove('show');
+    reflectionInput.value = '';
+    jarWrap.classList.add('shaking');
+
+    setTimeout(() => {
+      jarWrap.classList.remove('shaking');
+
+      const source = noteEls[Math.floor(Math.random() * noteEls.length)];
+      const sourceCore = source.querySelector('.firefly-core');
+      flyingNote.style.background = sourceCore ? sourceCore.style.background : '#e8ddf7';
+      flyingNote.classList.remove('launch');
+      void flyingNote.offsetWidth;
+      flyingNote.classList.add('launch');
+
+      setTimeout(() => {
+        burstSparkles();
+        currentPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+        revealText.textContent = currentPrompt;
+        revealCard.classList.add('show');
+        pullBtn.disabled = false;
+        busy = false;
+        reflectionInput.focus();
+      }, 700);
+    }, 620);
+  });
+
+  saveBtn.addEventListener('click', () => {
+    const response = reflectionInput.value.trim();
+    if (!response || !currentPrompt) return;
+    reflections.push({ prompt: currentPrompt, response: response });
+    renderReflectionsList();
+    savedNote.classList.add('show');
+    setTimeout(() => savedNote.classList.remove('show'), 2000);
+  });
+
+  openReflectionsBtn.addEventListener('click', () => {
+    renderReflectionsList();
+    modalOverlay.classList.add('open');
+  });
+  closeModalBtn.addEventListener('click', () => modalOverlay.classList.remove('open'));
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) modalOverlay.classList.remove('open');
+  });
+
+  renderReflectionsList();
+</script>
+
+</body>
+</html>
